@@ -30,10 +30,12 @@ def api_add():
 def api_products():
     return {'products': [(sanitize(entry)) for entry in store.all_products()]}
 
+
 @app.route('/api/product/<product_id>', methods=['DELETE'])
 def delete_prodcut(product_id):
     store.remove_product(product_id)
     return '', 200
+
 
 @app.route('/api/product/<product_id>', methods=['GET'])
 def get_product(product_id):
