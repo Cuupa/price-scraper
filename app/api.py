@@ -1,4 +1,4 @@
-from flask import request, abort
+from flask import request
 
 from app import app, scraper, store, scheduler
 from app.dataclasses.product import Product

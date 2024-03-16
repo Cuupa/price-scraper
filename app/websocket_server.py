@@ -1,8 +1,4 @@
-import asyncio
 import json
-
-from simple_websocket import Server
-
 from app import sock
 
 connections = set()
