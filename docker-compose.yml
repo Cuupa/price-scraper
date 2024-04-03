@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  price-scraper:
+    image: cuupa/price-scraper:latest
+    volumes:
+      - /volume2/docker/price-scraper/data:/opt/app/data
+    ports:
+      - 5000:5000
+    restart: unless-stopped
+
+  amazon-scraper:
+    image: cuupa/price-scraper-amazon:latest
+    restart: unless-stopped
+  amso-scraper:
+    image: cuupa/price-scraper-amso:latest
+    restart: unless-stopped
+  minisforum-scraper:
+    image: cuupa/price-scraper-minisforum:latest
+    restart: unless-stopped
+  yournextit:
+    image: cuupa/price-scraper-yournextit:latest
+    restart: unless-stopped

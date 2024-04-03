@@ -1,6 +1,7 @@
+import os
 import sqlite3
 
-database_file = "product.db"
+database_file = "data/product.db"
 create_statement = """create table if not exists product_history (
         id_product integer not null,
         price text,
@@ -19,6 +20,8 @@ delete_by_id = """delete from product_history where id_product=$value1;"""
 
 
 def init_db():
+    if not os.path.exists("data/"):
+        os.makedirs("data/")
     con = sqlite3.connect(database_file)
     cursor = con.cursor()
     cursor.execute(create_statement)
