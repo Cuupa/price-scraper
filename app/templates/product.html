@@ -47,7 +47,7 @@
             google.charts.setOnLoadCallback(drawChart);
 
             function drawChart() {
-                var data = new google.visualization.DataTable();
+                let data = new google.visualization.DataTable();
                 data.addColumn('string', 'Date');
                 data.addColumn('number', '{{ name }}');
 
@@ -60,7 +60,7 @@
                 console.log(result);
                 data.addRows(result);
 
-                var chartwidth = document.getElementById('chart').width;
+                let chartwidth = document.getElementById('chart').width;
 
                 let options = {
                     legend: {position: 'none'},
@@ -70,7 +70,7 @@
                     },
                     width: chartwidth
                 };
-                var chart = new google.charts.Line(document.getElementById('chart'));
+                let chart = new google.charts.Line(document.getElementById('chart'));
                 chart.draw(data, google.charts.Line.convertOptions(options));
             }
 

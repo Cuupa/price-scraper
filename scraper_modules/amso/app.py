@@ -1,3 +1,4 @@
+import os
 import socket
 import time
 from urllib.parse import urlsplit
@@ -76,12 +77,13 @@ def or_regex(symbols):
     return re.compile('|'.join(re.escape(s) for s in symbols))
 
 
-def register(hostname: str, scraper_port: int):
+def register(local_hostname: str, local_port: int, app_address: str, app_port: str):
     while True:
         time.sleep(5)
+        print(f"Trying to connect to http://{app_address}:{app_port}/api/scraper/register")
         try:
-            response = requests.post("http://localhost:5000/api/scraper/register",
-                                     json={"url": f"http://{hostname}:{scraper_port}/api/scrape",
+            response = requests.post(f"http://{app_address}:{app_port}/api/scraper/register",
+                                     json={"url": f"http://{local_hostname}:{str(local_port)}/api/scrape",
                                            "name": hostnames[0]})
             if response.status_code == 200:
                 print("Successfully registered scraper")
@@ -92,8 +94,13 @@ def register(hostname: str, scraper_port: int):
 
 if __name__ == '__main__':
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.bind(('localhost', 0))
-    port = sock.getsockname()[1]
+    sock.bind(('0.0.0.0', 0))
+    local_port = sock.getsockname()[1]
+    local_hostname = socket.gethostbyname(socket.gethostname())
     sock.close()
-    register(socket.gethostbyname(socket.gethostname()), port)
-    app.run('0.0.0.0', port)
+
+    app_address = os.environ.get("HOST_URL", "localhost")
+    app_port = os.environ.get("HOST_PORT", "5000")
+
+    register(local_hostname, local_port, app_address, app_port)
+    app.run('0.0.0.0', local_port)

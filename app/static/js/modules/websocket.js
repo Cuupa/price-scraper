@@ -1,7 +1,7 @@
 let ws
 
 export function openWebsocket() {
-    if( typeof(ws) == 'undefined' || ws.readyState === undefined || ws.readyState > 1){
+    if( typeof(ws) == 'undefined' || ws.readyState === undefined || ws.readyState > 1) {
         ws = new WebSocket("ws://localhost:5000/websocket");
         ws.addEventListener('open', function(msg) {
             console.log(msg);

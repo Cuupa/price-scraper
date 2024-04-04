@@ -30,6 +30,7 @@ products I'm interested in and notifies me about price drops.
 
 ## Getting Started
 
+### Start locally
 To get started with Price-Scraper, follow these steps:
 
 1. Clone the Repository: Clone the Price-Scraper repository to your local machine.
@@ -50,6 +51,12 @@ To get started with Price-Scraper, follow these steps:
 4. Run the Scrapers: Launch each scraper you want to use.
    ```commandline
    python3 scraper_modules/<module>/<module>.py
+   ```
+
+### Run as docker containers
+Download the docker-compose.yml and run
+   ```commandline
+   docker-compose up -d
    ```
 
 ## Usage

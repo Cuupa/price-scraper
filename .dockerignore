@@ -1,0 +1,7 @@
+.venv
+/media
+/data
+/scraper_modules
+.gitignore
+.idea
+Dockerfile

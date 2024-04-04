@@ -75,7 +75,7 @@ function save(event) {
         return response.json();
     })
     .then(data => {
-        load(data); // Assuming load function exists and is defined elsewhere
+        load(data);
     })
     .catch(error => {
         console.error('There was a problem with the fetch operation:', error);

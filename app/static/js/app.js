@@ -37,21 +37,21 @@ function navigateToProduct(event) {
     let tbody = document.querySelector("tbody");
     tbody.innerHTML = '';
     for (let i = 0; i < data['products'].length; i++) {
-        let cur = data['products'][i];
-        let _tr = tr(cur['id']);
-        let _th = th(cur['id']);
+        let current = data['products'][i];
+        let _tr = tr(current['id']);
+        let _th = th(current['id']);
         _th.addEventListener('click', navigateToProduct);
         _tr.appendChild(_th);
 
-        let name = td(cur['name'], 'product-name');
+        let name = td(current['name'], 'product-name');
         name.addEventListener('click', navigateToProduct);
         _tr.appendChild(name);
 
-        let currentPrice = td(cur['current_price'] + " " + cur['currency']);
+        let currentPrice = td(current['current_price'] + " " + current['currency']);
         currentPrice.addEventListener('click', navigateToProduct);
         _tr.appendChild(currentPrice);
 
-        let lowestPrice = td(cur['lowest_price'] + " " + cur['currency']);
+        let lowestPrice = td(current['lowest_price'] + " " + current['currency']);
         lowestPrice.addEventListener('click', navigateToProduct);
         _tr.appendChild(lowestPrice);
 

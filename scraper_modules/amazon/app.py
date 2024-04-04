@@ -1,15 +1,16 @@
+import os
 import socket
+import time
 from urllib.parse import urlsplit
 
 from bs4 import BeautifulSoup
 from datetime import datetime
 import re
 import requests
-import time
 import random
 from flask import Flask, request, abort
 
-hostnames = ["store.minisforum.de"]
+hostnames = ["amazon.com", "amazon.de"]
 currencies = ["€"]
 
 app = Flask(__name__)
@@ -25,8 +26,19 @@ user_agents = [
 ]
 
 
-def responsible(url):
-    return urlsplit(url).hostname in hostnames
+def is_responsible(url):
+    hostname = urlsplit(url).hostname.replace("www.", "")
+    return hostname in hostnames
+
+
+def get_price(soup: BeautifulSoup) -> tuple | None:
+    price_whole = soup.find(class_="a-price-whole")
+    if price_whole is None:
+        print("Could not find price")
+        return None
+    price_fraction = soup.find(class_="a-price-fraction")
+    price_symbol = soup.find(class_="a-price-symbol")
+    return price_whole.text.strip() + price_fraction.text.strip(), price_symbol.text.strip()
 
 
 @app.route('/api/scrape', methods=['POST'])
@@ -43,7 +55,7 @@ def _scrape(json):
         abort(400)
 
     url = json['url']
-    if not responsible(url):
+    if not is_responsible(url):
         return {
             "status": "not-responsible"
         }, 400
@@ -56,17 +68,14 @@ def _scrape(json):
         return {
             "status": "error"
         }, 500
-
     else:
         soup = BeautifulSoup(response.content, 'html.parser')
-        price = soup.find(class_="rating-with-text").find(class_="price-list price-list--lg").find(
-            class_="text-lg").find(class_="money conversion-bear-money")
-        name = soup.find(class_="product-info__title h2").text.strip()
+        price, currency = get_price(soup)
+        name = soup.find(id="productTitle").text.strip()
 
         if price is not None:
-            sanitized = price.text.replace(",", ".").strip()
-            currency = or_regex(currencies).search(sanitized).group(0)
-            price = sanitized.replace("*", "").replace(currency, "").strip()
+            sanitized = price.replace(",", ".").strip()
+            price = sanitized.replace("*", "").strip()
             return {
                 "status": "success",
                 "name": name,
@@ -74,30 +83,39 @@ def _scrape(json):
                 "currency": currency,
                 "date_time": date_time
             }
+        return {
+            "status": "error"
+        }, 500
 
 
 def or_regex(symbols):
     return re.compile('|'.join(re.escape(s) for s in symbols))
 
 
-def register(hostname: str, scraper_port: int):
+def register(local_hostname: str, local_port: int, app_address: str, app_port: str):
     while True:
         time.sleep(5)
+        print(f"Trying to connect to http://{app_address}:{app_port}/api/scraper/register")
         try:
-            response = requests.post("http://localhost:5000/api/scraper/register",
-                                     json={"url": "http://" + hostname + ":" + str(scraper_port) + "/api/scrape",
+            response = requests.post(f"http://{app_address}:{app_port}/api/scraper/register",
+                                     json={"url": f"http://{local_hostname}:{str(local_port)}/api/scrape",
                                            "name": hostnames[0]})
             if response.status_code == 200:
                 print("Successfully registered scraper")
                 break
-        except:
-            pass
+        except Exception as e:
+            print(e)
 
 
 if __name__ == '__main__':
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.bind(('localhost', 0))
-    port = sock.getsockname()[1]
+    sock.bind(('0.0.0.0', 0))
+    local_port = sock.getsockname()[1]
+    local_hostname = socket.gethostbyname(socket.gethostname())
     sock.close()
-    register(socket.gethostbyname(socket.gethostname()), port)
-    app.run('0.0.0.0', port)
+
+    app_address = os.environ.get("HOST_URL", "localhost")
+    app_port = os.environ.get("HOST_PORT", "5000")
+
+    register(local_hostname, local_port, app_address, app_port)
+    app.run('0.0.0.0', local_port)

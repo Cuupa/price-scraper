@@ -2,6 +2,7 @@ version: '3.8'
 services:
   price-scraper:
     image: cuupa/price-scraper:latest
+    container_name: price-scraper
     volumes:
       - /volume2/docker/price-scraper/data:/opt/app/data
     ports:
@@ -11,12 +12,23 @@ services:
   amazon-scraper:
     image: cuupa/price-scraper-amazon:latest
     restart: unless-stopped
+    environment:
+      HOST_URL: "price-scraper"
+
   amso-scraper:
     image: cuupa/price-scraper-amso:latest
     restart: unless-stopped
+    environment:
+      HOST_URL: "price-scraper"
+
   minisforum-scraper:
     image: cuupa/price-scraper-minisforum:latest
     restart: unless-stopped
+    environment:
+      HOST_URL: "price-scraper"
+
   yournextit:
     image: cuupa/price-scraper-yournextit:latest
     restart: unless-stopped
+    environment:
+      HOST_URL: "price-scraper"
