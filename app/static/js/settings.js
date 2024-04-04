@@ -82,6 +82,15 @@ function save(event) {
     });
 }
 
+function bindSwitchToInputfield() {
+    let _switch = document.getElementById("switchNtfy");
+    if(_switch.checked) {
+        document.getElementById("ntfyUrl").disabled = true;
+    } else {
+        document.getElementById("ntfyUrl").disabled = false;
+    }
+}
+
 async function loadData() {
     let response = fetch("/api/settings");
     const scrapers = await response;
@@ -91,5 +100,6 @@ async function loadData() {
 window.addEventListener('load', async _ => {
     let data = await loadData();
     createTable(data);
+    bindSwitchToInputfield();
     openWebsocket();
 });
