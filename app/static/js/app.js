@@ -24,7 +24,7 @@ function add(url, xpath_name, xpath_price) {
         return result.json();
     })
     .then(data => {
-        load(data)
+        createTable(data)
     });
 }
 
