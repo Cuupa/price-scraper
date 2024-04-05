@@ -14,6 +14,9 @@ insert_statement = """insert into notification(type, url, enabled) values ("$val
 update_statement = """update notification set type="$value1", url="$value2", enabled=$value3 where id=$id"""
 search_statement = """select id, type, url from notification where type="$value";"""
 
+select_all = """select id, type, url, enabled from notification;"""
+select_all_enabled = """select id, type, url, enabled from notification where enabled=1;"""
+
 
 def init_db():
     if not os.path.exists("data/"):
@@ -35,21 +38,32 @@ def search(type: str):
     return rows
 
 
-def save(type: str, url: str, enabled: bool) -> bool:
+def save(type: str, url: str, enabled: bool):
     init_db()
-    success = False
 
     con = sqlite3.connect(database_file)
     cursor = con.cursor()
     notifications = search(type)
 
     if len(notifications) == 0:
-        stmnt = insert_statement.replace("$value1", type).replace("$value2", url).replace("$value3", "1" if enabled else "0")
+        stmnt = (insert_statement.replace("$value1", type)
+                 .replace("$value2", url)
+                 .replace("$value3", "1" if enabled else "0"))
     else:
-        stmnt = update_statement.replace("$value1", type).replace("$value2", url).replace("$value3", "1" if enabled else "0").replace("$id", str(notifications[0][0]))
+        stmnt = (update_statement.replace("$value1", type)
+                 .replace("$value2", url)
+                 .replace("$value3", "1" if enabled else "0")
+                 .replace("$id", str(notifications[0][0])))
 
     cursor.execute(stmnt)
     con.commit()
-    success = True
     con.close()
-    return success
+
+
+def get_all_enabled():
+    init_db()
+    con = sqlite3.connect(database_file)
+    cursor = con.cursor()
+    stmnt = select_all_enabled
+    cursor.execute(stmnt)
+    return cursor.fetchall()

@@ -16,11 +16,13 @@ def api_register():
 @app.route('/api/notification', methods=['PUT'])
 def register_notification_service():
     data = request.get_json()
-    type = data['type']
-    url = data['url']
-    enabled = data['enabled']
-    notifications.register(type, url, enabled)
-    return '', 200
+    notification_type = data['type']
+    if notification_type is 'ntfy':
+        url = data['url']
+        enabled = data['enabled']
+        notifications.register(notification_type, url, enabled)
+        return '', 200
+    return '', 501
 
 
 @app.route('/api/notification', methods=['DELETE'])
