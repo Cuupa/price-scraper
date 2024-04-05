@@ -82,13 +82,52 @@ function save(event) {
     });
 }
 
-function bindSwitchToInputfield() {
-    let _switch = document.getElementById("switchNtfy");
-    if(_switch.checked) {
-        document.getElementById("ntfyUrl").disabled = true;
-    } else {
-        document.getElementById("ntfyUrl").disabled = false;
+function isInvalidUrl(url) {
+    try {
+        new URL(url);
+        return false;
+    } catch (err) {
+        return true;
     }
+}
+
+function updateNtfy(ntfyUrl, enabled) {
+    fetch("/api/notification", {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            "type": "ntfy",
+            "url": ntfyUrl,
+            "enabled": enabled
+        })
+    });
+}
+
+function bindInputfields() {
+    let ntfy = document.getElementById("switchNtfy");
+    ntfy.addEventListener("click", function() {
+        if(ntfy.checked) {
+            document.getElementById("ntfyUrl").disabled = false;
+        } else {
+            document.getElementById("ntfyUrl").disabled = true;
+        }
+
+        let ntfyUrl = document.getElementById("ntfyUrl").value
+        updateNtfy(ntfyUrl, ntfy.checked);
+    });
+
+    let saveButton = document.getElementById("button-save-ntfy");
+    saveButton.addEventListener("click", function() {
+        let ntfyUrl = document.getElementById("ntfyUrl").value
+
+        // TODO: give feedback if invalid
+        if(isInvalidUrl(ntfyUrl)) {
+            return;
+        }
+        updateNtfy(ntfyUrl, ntfy.checked);
+    });
 }
 
 async function loadData() {
@@ -100,6 +139,6 @@ async function loadData() {
 window.addEventListener('load', async _ => {
     let data = await loadData();
     createTable(data);
-    bindSwitchToInputfield();
+    bindInputfields();
     openWebsocket();
 });

@@ -1,10 +1,10 @@
 from flask import request
 
-from app import app, scraper, store, scheduler
+from app import app, scraper, store, scheduler, notifications
 from app.dataclasses.product import Product
 
 
-@app.route("/api/scraper/register", methods=['POST'])
+@app.route('/api/scraper/register', methods=['POST'])
 def api_register():
     data = request.get_json()
     url = data['url']
@@ -13,7 +13,22 @@ def api_register():
     return '', 200
 
 
-@app.route("/api/add", methods=['POST'])
+@app.route('/api/notification', methods=['PUT'])
+def register_notification_service():
+    data = request.get_json()
+    type = data['type']
+    url = data['url']
+    enabled = data['enabled']
+    notifications.register(type, url, enabled)
+    return '', 200
+
+
+@app.route('/api/notification', methods=['DELETE'])
+def delete_notification_service():
+    data = request.get_json()
+
+
+@app.route('/api/product', methods=['PUT'])
 def api_add():
     data = request.get_json()
 
@@ -21,12 +36,12 @@ def api_add():
         success = store.store_product(data['url'])
         if success:
             scheduler.scrape_products()
-            return data['url'] + " successfully added"
+            return data['url'] + ' successfully added'
         else:
-            return data['url'] + " already exists"
+            return data['url'] + ' already exists'
 
 
-@app.route("/api/products", methods=['GET'])
+@app.route('/api/products', methods=['GET'])
 def api_products():
     return {'products': [(sanitize(entry)) for entry in store.all_products()]}
 
@@ -43,17 +58,17 @@ def get_product(product_id):
     return {'product': points}, 200
 
 
-@app.route("/api/scrapers", methods=['GET'])
+@app.route('/api/scrapers', methods=['GET'])
 def api_scrapers():
     return {'scrapers': scraper.scrapers}
 
 
-@app.route("/api/settings", methods=['GET'])
+@app.route('/api/settings', methods=['GET'])
 def api_settings():
     return {'interval': scheduler.interval}
 
 
-@app.route("/api/settings/interval", methods=['POST'])
+@app.route('/api/settings/interval', methods=['POST'])
 def api_interval():
     data = request.get_json()
     scheduler.update_settings(int(data['interval']))
@@ -68,4 +83,4 @@ def sanitize(x: Product) -> Product:
 
 
 def replace_none(string: str) -> str:
-    return "-" if string is None else string
+    return '-' if string is None else string
