@@ -2,8 +2,8 @@ import { html, tr, td, th, a, button } from "./modules/lib.js"
 import { openWebsocket } from "./modules/websocket.js"
 
 function add(url, xpath_name, xpath_price) {
-    fetch("/api/add", {
-        method: "POST",
+    fetch("/api/product", {
+        method: "PUT",
         headers: {
             "Content-Type": "application/json"
         },
@@ -24,7 +24,7 @@ function add(url, xpath_name, xpath_price) {
         return result.json();
     })
     .then(data => {
-        load(data)
+        createTable(data)
     });
 }
 

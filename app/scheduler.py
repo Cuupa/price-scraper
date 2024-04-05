@@ -3,7 +3,7 @@ import threading
 import schedule
 import time
 
-from app import store
+from app.product_persistence import store
 from app import scraper
 from app import websocket_server
 

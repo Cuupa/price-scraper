@@ -1,25 +1,18 @@
 from flask import request
 
-from app import app, scraper, store, scheduler
+from app import app, scraper, scheduler
+from app.product_persistence import store
 from app.dataclasses.product import Product
 
 
-@app.route("/api/scraper/register", methods=['POST'])
-def api_register():
-    data = request.get_json()
-    url = data['url']
-    name = data['name']
-    scraper.register(name, url)
-    return '', 200
-
-
-@app.route("/api/add", methods=['POST'])
+@app.route("/api/product", methods=['PUT'])
 def api_add():
     data = request.get_json()
 
     if data['type'] == 'item':
         success = store.store_product(data['url'])
         if success:
+            print("Added product, attempting scrape")
             scheduler.scrape_products()
             return data['url'] + " successfully added"
         else:
@@ -41,22 +34,6 @@ def delete_prodcut(product_id):
 def get_product(product_id):
     points = store.find(product_id)
     return {'product': points}, 200
-
-
-@app.route("/api/scrapers", methods=['GET'])
-def api_scrapers():
-    return {'scrapers': scraper.scrapers}
-
-
-@app.route("/api/settings", methods=['GET'])
-def api_settings():
-    return {'interval': scheduler.interval}
-
-
-@app.route("/api/settings/interval", methods=['POST'])
-def api_interval():
-    data = request.get_json()
-    scheduler.update_settings(int(data['interval']))
 
 
 def sanitize(x: Product) -> Product:
