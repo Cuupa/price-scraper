@@ -39,6 +39,26 @@ function createTable(data, status) {
     tbody.appendChild(_tr);
 }
 
+function fillNtfyData(data) {
+    document.getElementById("switchNtfy").checked = data['enabled'];
+    document.getElementById("ntfyUrl").value = data['url'];
+    document.getElementById("ntfyTopic").value = data['topic'];
+    document.getElementById("ntfyPriority").value = data['priority'];
+
+    if(data['username']) {
+       document.getElementById("ntfyAuthentication").value = 'Basic auth';
+       document.getElementById("ntfyUsername").value = data['username'];
+       document.getElementById("ntfyPassword").value = data['password'];
+    } else if (data['accesstoken']){
+        document.getElementById("ntfyAuthentication").value = 'Access token';
+        document.getElementById("ntfyAccessToken").value = data['accesstoken'];
+    } else {
+        document.getElementById("ntfyAuthentication").value = 'none';
+    }
+
+    assignNtfyAuthFields(document.getElementById("ntfyAuthentication").value);
+}
+
 function save(event) {
     document.getElementById('interval').readOnly = true;
     document.getElementById('save-0').hidden = true;
@@ -91,7 +111,8 @@ function isInvalidUrl(url) {
     }
 }
 
-function updateNtfy(ntfyUrl, enabled) {
+function updateNtfy() {
+
     fetch("/api/notification", {
         method: "PUT",
         headers: {
@@ -99,23 +120,48 @@ function updateNtfy(ntfyUrl, enabled) {
         },
         body: JSON.stringify({
             "type": "ntfy",
-            "url": ntfyUrl,
-            "enabled": enabled
+            "url": document.getElementById("ntfyUrl").value,
+            "topic": document.getElementById("ntfyTopic").value,
+            "priority": document.getElementById("ntfyPriority").value,
+            "username": document.getElementById('ntfyUsername').value,
+            "password": document.getElementById('ntfyPassword').value,
+            "token": document.getElementById('ntfyAccessToken').value,
+            "enabled": document.getElementById("switchNtfy").checked
         })
     });
 }
 
-function bindInputfields() {
+function handleNtfySwitch() {
+    let enabled = document.getElementById("switchNtfy").checked;
+    for (let element of document.getElementsByName("ntfy")) {
+        element.disabled = !enabled;
+    }
+}
+
+function assignNtfyAuthFields(authMethod) {
+    let usernamePassword = document.getElementById("ntfyUsernamePassword");
+    let accessToken = document.getElementById("div_ntfyAccessToken");
+    if(authMethod === "none") {
+        usernamePassword.hidden = true;
+        accessToken.hidden = true;
+    } else if (authMethod === "Basic auth") {
+        usernamePassword.hidden = false;
+        accessToken.hidden = true;
+    } else if (authMethod === "Access token") {
+        usernamePassword.hidden = true;
+        accessToken.hidden = false;
+    }
+}
+
+function addNtfyEventListener() {
     let ntfy = document.getElementById("switchNtfy");
     ntfy.addEventListener("click", function() {
-        if(ntfy.checked) {
-            document.getElementById("ntfyUrl").disabled = false;
-        } else {
-            document.getElementById("ntfyUrl").disabled = true;
-        }
+        handleNtfySwitch();
+    });
 
-        let ntfyUrl = document.getElementById("ntfyUrl").value
-        updateNtfy(ntfyUrl, ntfy.checked);
+    let ntfyAuth = document.getElementById("ntfyAuthentication");
+    ntfyAuth.addEventListener("change", function() {
+        assignNtfyAuthFields(this.value);
     });
 
     let saveButton = document.getElementById("button-save-ntfy");
@@ -126,7 +172,7 @@ function bindInputfields() {
         if(isInvalidUrl(ntfyUrl)) {
             return;
         }
-        updateNtfy(ntfyUrl, ntfy.checked);
+        updateNtfy();
     });
 }
 
@@ -136,9 +182,17 @@ async function loadData() {
     return scrapers.json();
 }
 
+async function loadNtfy() {
+    let response = fetch("/api/notification/ntfy");
+    const ntfy = await response;
+    return ntfy.json();
+}
+
 window.addEventListener('load', async _ => {
     let data = await loadData();
     createTable(data);
-    bindInputfields();
+    addNtfyEventListener();
+    let ntfyData = await loadNtfy();
+    fillNtfyData(ntfyData);
     openWebsocket();
 });

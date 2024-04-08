@@ -77,23 +77,67 @@
                 <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
                      data-bs-parent="#accordion-settings">
                     <div class="accordion-body">
-                        <h3>ntfy</h3>
-                        <div class="form-check form-switch">
+                        <h3>ntfy</h3><i class="bi bi-question-circle"></i>
+
+                        <div class="form-check form-switch mb-3">
                             <input class="form-check-input" type="checkbox" role="switch" id="switchNtfy">
                             <label class="form-check-label" for="switchNtfy">Enable ntfy</label>
+                        </div>
 
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" id="ntfyUrl" placeholder="https://ntfy.sh/" name="ntfy">
+                            <span class="input-group-text">/</span>
+                            <input type="text" class="form-control" id="ntfyTopic" placeholder="my-price-scraper" name="ntfy">
+                            <!--                            <label for="ntfyUrl">ntfy-URL</label>-->
                         </div>
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="ntfyUrl" placeholder="https://ntfy.sh/my-price-scraper">
-<!--                            <label for="ntfyUrl">ntfy-URL</label>-->
-                            <button class="btn btn-outline-secondary" type="button" id="button-save-ntfy">Save</button>
+                        <br/>
+                        <div class="form-floating mb-3">
+                            <select class="form-select" aria-label="Select priority" id="ntfyPriority" name="ntfy">
+                                <option value="5">Urgent (5)</option>
+                                0
+                                <option value="4">High (4)</option>
+                                <option selected value="3">Default (3)</option>
+                                <option value="2">Low (2)</option>
+                                <option value="1">Min (1)</option>
+                            </select>
+                            <label for="ntfyPriority">Message Priority</label>
                         </div>
+
+                        <br/>
+
+                        <div class="form-floating mb-3">
+                            <select class="form-select" aria-label="Authentication" id="ntfyAuthentication" name="ntfy">
+                                <option value="none" selected>No authentication</option>
+                                <option value="Basic auth">Basic authentication</option>
+                                <option value="Access token">Access token</option>
+                            </select>
+                            <label for="ntfyAuthentication">Authentication</label>
+                        </div>
+                        <br/>
+
+                        <div class="input-group mb-3" id="ntfyUsernamePassword">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="ntfyUsername" placeholder="Username" name="ntfy">
+                                <label for="ntfyUsername">Username</label>
+                            </div>
+                            &nbsp;
+                            <div class="form-floating mb-3">
+                                <input type="password" class="form-control" id="ntfyPassword" placeholder="Password" name="ntfy">
+                                <label for="ntfyPassword">Password</label>
+                            </div>
+                        </div>
+
+                        <div class="form-floating input-group mb-3" id="div_ntfyAccessToken">
+                            <input type="text" class="form-control" id="ntfyAccessToken" placeholder="Access token" name="ntfy">
+                            <label for="ntfyAccessToken">Access token</label>
+                        </div>
+
+                        <button class="btn btn-outline-primary" type="button" id="button-save-ntfy">Save</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 </div>
 
 <script src="static/js/settings.js" type="module"></script>
