@@ -6,21 +6,20 @@ import base64
 
 
 def notify(product: Product, price: float):
-    notifications = notifications_store.search('ntfy')
+    notification = notifications_store.search('ntfy')
 
-    for notification in notifications:
-        headers = {"Priority": notification.priority}
+    headers = {"Priority": str(notification.priority)}
 
-        if notification.username is not None:
-            auth_bytes = bytes(notification.username + ":" + notification.password, 'UTF-8')
-            headers['Authorization'] = 'Basic ' + str(base64.b64encode(auth_bytes))
-        elif notification.accesstoken is not None:
-            headers['Authorization'] = 'Bearer ' + notification.accesstoken
+    if notification.username is not None:
+        auth_bytes = bytes(notification.username + ":" + notification.password, 'UTF-8')
+        headers['Authorization'] = f'Basic {str(base64.b64encode(auth_bytes))}'
+    elif notification.accesstoken is not None:
+        headers['Authorization'] = f'Bearer {notification.accesstoken}'
 
-        payload = f'Price of {product} has dropped to {price}'
-        requests.post(notification.url,
-                      data=payload.encode(encoding='utf-8'),
-                      headers=headers)
+    payload = f'Price of {product} has dropped to {price}'
+    requests.post(f'{notification.url}/{notification.topic}',
+                  data=payload,
+                  headers=headers)
 
 
 def filter_ntfy(notification):

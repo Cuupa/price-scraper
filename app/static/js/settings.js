@@ -2,35 +2,35 @@ import { html, tr, td, th, a, button, input } from "./modules/lib.js"
 import { openWebsocket } from "./modules/websocket.js"
 
 function createTable(data, status) {
-    var tbody = document.querySelector("tbody");
+    const tbody = document.querySelector("tbody");
     tbody.innerHTML = '';
 
-    let interval = data['interval'];
+    const interval = data['interval'];
 
-    let _th = th('1');
+    const _th = th('1');
 
-    let interval_td = td('interval');
+    const interval_td = td('interval');
     interval_td.textContent = "interval";
 
-    let _input = input(data['interval'], 'interval', 'number', true);
-    let input_td = td();
+    const _input = input(data['interval'], 'interval', 'number', true);
+    const input_td = td();
     input_td.appendChild(_input);
 
-    let edit_button = button('Edit', 'edit-0', 'btn', 'btn-primary', 'btn-sm');
+    const edit_button = button('Edit', 'edit-0', 'btn', 'btn-primary', 'btn-sm');
     edit_button.addEventListener('click', function(event) {
         document.getElementById('interval').readOnly = false;
         document.getElementById('edit-0').hidden = true;
         document.getElementById('save-0').removeAttribute('hidden');
     });
 
-    let save_button = button('Save', 'save-0', 'btn', 'btn-primary', 'btn-sm');
+    const save_button = button('Save', 'save-0', 'btn', 'btn-primary', 'btn-sm');
     save_button.setAttribute('hidden', 'true');
     save_button.addEventListener('click',save);
-    let td_buttons = td();
+    const td_buttons = td();
     td_buttons.appendChild(edit_button);
     td_buttons.appendChild(save_button);
 
-    let _tr = tr('0');
+    const _tr = tr('0');
     _tr.appendChild(_th);
     _tr.appendChild(interval_td);
     _tr.appendChild(input_td);
@@ -40,18 +40,18 @@ function createTable(data, status) {
 }
 
 function fillNtfyData(data) {
-    document.getElementById("switchNtfy").checked = data['enabled'];
-    document.getElementById("ntfyUrl").value = data['url'];
-    document.getElementById("ntfyTopic").value = data['topic'];
-    document.getElementById("ntfyPriority").value = data['priority'];
+    document.getElementById("switchNtfy").checked = data.enabled;
+    document.getElementById("ntfyUrl").value = data.url;
+    document.getElementById("ntfyTopic").value = data.topic;
+    document.getElementById("ntfyPriority").value = data.priority;
 
-    if(data['username']) {
+    if(data.username) {
        document.getElementById("ntfyAuthentication").value = 'Basic auth';
-       document.getElementById("ntfyUsername").value = data['username'];
-       document.getElementById("ntfyPassword").value = data['password'];
-    } else if (data['accesstoken']){
+       document.getElementById("ntfyUsername").value = data.username;
+       document.getElementById("ntfyPassword").value = data.password;
+    } else if (data.accesstoken){
         document.getElementById("ntfyAuthentication").value = 'Access token';
-        document.getElementById("ntfyAccessToken").value = data['accesstoken'];
+        document.getElementById("ntfyAccessToken").value = data.accesstoken;
     } else {
         document.getElementById("ntfyAuthentication").value = 'none';
     }
@@ -132,10 +132,10 @@ function updateNtfy() {
 }
 
 function handleNtfySwitch() {
-    let enabled = document.getElementById("switchNtfy").checked;
-    for (let element of document.getElementsByName("ntfy")) {
+    const enabled = document.getElementById("switchNtfy").checked;
+    document.getElementsByName("ntfy").forEach(element => {
         element.disabled = !enabled;
-    }
+    });
 }
 
 function assignNtfyAuthFields(authMethod) {
@@ -154,17 +154,17 @@ function assignNtfyAuthFields(authMethod) {
 }
 
 function addNtfyEventListener() {
-    let ntfy = document.getElementById("switchNtfy");
+    const ntfy = document.getElementById("switchNtfy");
     ntfy.addEventListener("click", function() {
         handleNtfySwitch();
     });
 
-    let ntfyAuth = document.getElementById("ntfyAuthentication");
+    const ntfyAuth = document.getElementById("ntfyAuthentication");
     ntfyAuth.addEventListener("change", function() {
         assignNtfyAuthFields(this.value);
     });
 
-    let saveButton = document.getElementById("button-save-ntfy");
+    const saveButton = document.getElementById("button-save-ntfy");
     saveButton.addEventListener("click", function() {
         let ntfyUrl = document.getElementById("ntfyUrl").value
 
@@ -173,6 +173,27 @@ function addNtfyEventListener() {
             return;
         }
         updateNtfy();
+    });
+
+    const testButton = document.getElementById("test-ntfy")
+    testButton.addEventListener("click", function() {
+        const url = document.getElementById("ntfyUrl").value + "/" + document.getElementById("ntfyTopic").value
+        const username = document.getElementById('ntfyUsername').value;
+        const password = document.getElementById('ntfyPassword').value
+        const headers = {'Priority': document.getElementById("ntfyPriority").value};
+        const authType = document.getElementById("ntfyAuthentication").value;
+
+        if (authType === "Basic auth") {
+            headers["Authorization"] = "Basic " + btoa(username + ":" + password);
+        } else if (authType === "Access token") {
+            headers["Authorization"] = "Bearer " + document.getElementById('ntfyAccessToken').value
+        }
+
+        fetch(url, {
+            method: 'POST',
+            body: 'Notification working',
+            headers: headers
+        });
     });
 }
 

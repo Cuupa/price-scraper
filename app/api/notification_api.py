@@ -45,12 +45,12 @@ def load_notifications(notification_type: str):
     if notification is None:
         return '', 200
     return {
-        'url': notification[1],
-        'topic': notification[2],
-        'enabled': notification[3],
-        'priority': notification[4],
-        'username': notification[5],
+        'url': notification.url,
+        'topic': notification.topic,
+        'enabled': notification.enabled,
+        'priority': notification.priority,
+        'username': notification.username,
         'password': '*********',
-        'accesstoken': '*********' if notification[7] else None
+        'accesstoken': '*********' if notification.accesstoken else None
     }, 200
 

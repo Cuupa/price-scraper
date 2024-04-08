@@ -58,7 +58,14 @@ def search(notification_type):
     rows = cursor.fetchall()
     if len(rows) == 0:
         return None
-    return rows[0]
+    entry = rows[0]
+    return ntfy(url=entry[1],
+                topic=entry[2],
+                enabled=entry[3],
+                priority=entry[4],
+                username=entry[5],
+                password=entry[6],
+                accesstoken=entry[7])
 
 
 def save(notification: ntfy):
