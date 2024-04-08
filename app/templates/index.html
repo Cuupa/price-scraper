@@ -3,6 +3,9 @@
     <title>Price Scraper</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+    <link href="static/css/main.css" rel="stylesheet">
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
             crossorigin="anonymous"></script>
@@ -34,8 +37,8 @@
 </nav>
 
 <div class="toast-container position-absolute" style="z-index: 100000;padding: 10px;"></div>
-<div class='search-bar'>
-    <div class='container'>
+<div class='container'>
+    <div class='search-bar'>
         <h1>Link</h1>
         <!--        <h6 style="padding-bottom: 30px;">(Any Amazon site could work)</h6>-->
         <div class='row'>
@@ -44,15 +47,13 @@
                     <input type="text" class="form-control" id="link" placeholder="Link">
                 </div>
             </div>
-             <div class="col-sm-2">
+            <div class="col-sm-2">
                 <button id='add' type="button" class="btn btn-warning" style="width:100%" onclick="">Track</button>
             </div>
         </div>
     </div>
-</div>
 
-<div class='table-div'>
-    <div class='container'>
+    <div class='table-div'>
         <p id="update_time" style='text-align: center;'>Updated at: </p>
         <div class='table-responsive'>
             <table class="table">
@@ -70,7 +71,6 @@
                 </tbody>
             </table>
         </div>
-
     </div>
 </div>
 
