@@ -5,7 +5,7 @@ import time
 
 from app.product_persistence import store
 from app import scraper
-from app import websocket_server
+from app.notifications import notifications
 
 job: threading.Event
 interval: int
@@ -18,8 +18,8 @@ def scrape_products():
             if name == "" or name is None:
                 continue
             store.add_point(product.id, name, price, currency, date_time)
-            if price < product.current_price:
-                websocket_server.send_message(product, price)
+            if price < product.current_price and product.current_price is not None:
+                notifications.notify(product, price)
         except Exception as error:
             print("An Error occured", error)
 
