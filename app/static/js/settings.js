@@ -1,5 +1,6 @@
-import { html, tr, td, th, a, button, input } from "./modules/lib.js"
-import { openWebsocket } from "./modules/websocket.js"
+import { html, tr, td, th, a, button, input, isEmpty } from "./modules/lib.js";
+import { openWebsocket } from "./modules/websocket.js";
+import { showSuccessPopup, showErrorPopup } from "./modules/notifications.js";
 
 function createTable(data, status) {
     const tbody = document.querySelector("tbody");
@@ -39,21 +40,34 @@ function createTable(data, status) {
     tbody.appendChild(_tr);
 }
 
-function fillNtfyData(data) {
-    document.getElementById("switchNtfy").checked = data.enabled;
-    document.getElementById("ntfyUrl").value = data.url;
-    document.getElementById("ntfyTopic").value = data.topic;
-    document.getElementById("ntfyPriority").value = data.priority;
+function setNtfySwitchOff() {
+    document.getElementById("switchNtfy").checked = false;
+    document.getElementById("ntfyAuthentication").value = 'none';
+    document.getElementById("ntfyPriority").value = '3';
+    document.getElementsByName("ntfy").forEach(element => {
+        element.disabled = true;
+    });
+}
 
-    if(data.username) {
-       document.getElementById("ntfyAuthentication").value = 'Basic auth';
-       document.getElementById("ntfyUsername").value = data.username;
-       document.getElementById("ntfyPassword").value = data.password;
-    } else if (data.accesstoken){
-        document.getElementById("ntfyAuthentication").value = 'Access token';
-        document.getElementById("ntfyAccessToken").value = data.accesstoken;
+function fillNtfyData(data) {
+    if(isEmpty(data)) {
+        setNtfySwitchOff();
     } else {
-        document.getElementById("ntfyAuthentication").value = 'none';
+        document.getElementById("switchNtfy").checked = data.enabled;
+        document.getElementById("ntfyUrl").value = data.url;
+        document.getElementById("ntfyTopic").value = data.topic;
+        document.getElementById("ntfyPriority").value = data.priority;
+
+        if(data.username) {
+           document.getElementById("ntfyAuthentication").value = 'Basic auth';
+           document.getElementById("ntfyUsername").value = data.username;
+           document.getElementById("ntfyPassword").value = data.password;
+        } else if (data.accesstoken){
+            document.getElementById("ntfyAuthentication").value = 'Access token';
+            document.getElementById("ntfyAccessToken").value = data.accesstoken;
+        } else {
+            document.getElementById("ntfyAuthentication").value = 'none';
+        }
     }
 
     assignNtfyAuthFields(document.getElementById("ntfyAuthentication").value);
@@ -75,6 +89,7 @@ function save(event) {
     })
     .then(response => {
         if (!response.ok) {
+            showErrorPopup("Error", "Could not loading settings");
             throw new Error('Network response was not ok');
         }
         return response.json();
@@ -90,14 +105,17 @@ function save(event) {
     })
     .then(response => {
         if (!response.ok) {
+            showErrorPopup("Error", "Could not loading settings");
             throw new Error('Network response was not ok');
         }
+        showSuccessPopup("Saved", "Your settings have been saved");
         return response.json();
     })
     .then(data => {
         load(data);
     })
     .catch(error => {
+        showErrorPopup("Error", "Could not loading settings");
         console.error('There was a problem with the fetch operation:', error);
     });
 }
@@ -128,6 +146,13 @@ function updateNtfy() {
             "token": document.getElementById('ntfyAccessToken').value,
             "enabled": document.getElementById("switchNtfy").checked
         })
+    })
+    .then(response => {
+        if (!response.ok) {
+            showErrorPopup("Error", "Could not load ntfy setttings");
+            throw new Error('Network response was not ok');
+        }
+        showSuccessPopup("Saved", "Your settings have been saved");
     });
 }
 
