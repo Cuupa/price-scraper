@@ -1,4 +1,5 @@
-from app import app, scraper
+from app import app
+from app.scraping import scraper
 from flask import request
 
 

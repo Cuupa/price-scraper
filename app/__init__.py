@@ -5,6 +5,6 @@ app = Flask(__name__)
 sock = Sock(app)
 from app import routes
 from app import api
-from app import scheduler
+from app.scraping import scheduler
 
 scheduler.run()

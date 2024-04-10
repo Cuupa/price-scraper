@@ -1,6 +1,7 @@
 from flask import request
 
-from app import app, scraper, scheduler
+from app import app
+from app.scraping import scheduler
 from app.product_persistence import store
 from app.dataclasses.product import Product
 

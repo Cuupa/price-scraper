@@ -4,7 +4,7 @@ import schedule
 import time
 
 from app.product_persistence import store
-from app import scraper
+from app.scraping import scraper
 from app.notifications import notifications
 
 job: threading.Event

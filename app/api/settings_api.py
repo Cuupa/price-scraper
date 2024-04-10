@@ -1,6 +1,7 @@
 from flask import request
 
-from app import app, scheduler
+from app import app
+from app.scraping import scheduler
 
 
 @app.route("/api/settings", methods=['GET'])
