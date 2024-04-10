@@ -9,3 +9,4 @@ class ntfy:
     username: str
     password: bytes
     accesstoken: bytes
+    id: int = -1

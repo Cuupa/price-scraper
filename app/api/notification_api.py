@@ -43,7 +43,7 @@ def register_notification_service():
 def load_notifications(notification_type: str):
     notification = notifications.get(notification_type)
     if notification is None:
-        return '', 200
+        return '{}', 200
     return {
         'url': notification.url,
         'topic': notification.topic,

@@ -24,7 +24,7 @@ ntfy_insert_statement = """insert into ntfy(
     username, 
     password, 
     accesstoken
-) values (?, ?, ?, ?, ?, ?, ?, ?);"""
+) values (?, ?, ?, ?, ?, ?, ?);"""
 ntfy_update_statement = """update ntfy set 
     url=?, 
     topic=?,
@@ -58,14 +58,14 @@ def search(notification_type):
     rows = cursor.fetchall()
     if len(rows) == 0:
         return None
-    entry = rows[0]
-    return ntfy(url=entry[1],
-                topic=entry[2],
-                enabled=entry[3],
-                priority=entry[4],
-                username=entry[5],
-                password=entry[6],
-                accesstoken=entry[7])
+    return ntfy(id=rows[0][0],
+                url=rows[0][1],
+                topic=rows[0][2],
+                enabled=rows[0][3],
+                priority=rows[0][4],
+                username=rows[0][5],
+                password=rows[0][6],
+                accesstoken=rows[0][7])
 
 
 def save(notification: ntfy):
@@ -73,9 +73,9 @@ def save(notification: ntfy):
 
     con = sqlite3.connect(database_file)
     cursor = con.cursor()
-    notifications = search('ntfy')
+    existing_notification = search('ntfy')
 
-    if notifications is None:
+    if existing_notification is None:
         cursor.execute(ntfy_insert_statement,
                        (notification.url,
                         notification.topic,
@@ -92,7 +92,7 @@ def save(notification: ntfy):
                                                notification.username,
                                                notification.password,
                                                notification.accesstoken,
-                                               notifications[0]))
+                                               existing_notification.id))
 
     con.commit()
     con.close()
