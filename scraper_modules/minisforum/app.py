@@ -66,11 +66,11 @@ def _scrape(json):
         if price is not None:
             sanitized = price.text.replace(",", ".").strip()
             currency = or_regex(currencies).search(sanitized).group(0)
-            price = sanitized.replace("*", "").replace(currency, "").strip()
+            price, sep, appendix = sanitized.replace("*", "").replace(currency, "").partition(" ")
             return {
                 "status": "success",
                 "name": name,
-                "price": price,
+                "price": price.strip(),
                 "currency": currency,
                 "date_time": date_time
             }

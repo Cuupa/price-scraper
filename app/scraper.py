@@ -26,7 +26,9 @@ def run(url: str) -> tuple:
                 continue
             json = result.json()
 
-            return json['name'], json['price'], json['currency'], json['date_time']
+            price, sep, appendix = json['price'].partition(" ")
+
+            return json['name'].strip(), price.strip(), json['currency'].strip(), json['date_time']
         except Exception as e:
             print("Error calling scraper " + scraper)
             print(e)
