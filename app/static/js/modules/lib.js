@@ -66,3 +66,7 @@ export function input(value, id, type, disabled) {
     return input;
 }
 
+export function isEmpty(object) {
+    return Object.keys(object).length === 0;
+}
+
