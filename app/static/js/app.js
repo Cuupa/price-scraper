@@ -1,5 +1,6 @@
-import { html, tr, td, th, a, button } from "./modules/lib.js"
-import { openWebsocket } from "./modules/websocket.js"
+import { html, tr, td, th, a, button } from "./modules/lib.js";
+import { openWebsocket } from "./modules/websocket.js";
+import { showSuccessPopup } from "./modules/notifications.js";
 
 function add(url, xpath_name, xpath_price) {
     fetch("/api/product", {
@@ -17,14 +18,16 @@ function add(url, xpath_name, xpath_price) {
         document.getElementById("add").innerHTML = "Track";
         document.getElementById("add").classList.remove("disabled");
         document.getElementById("link").value = "";
-    });
 
-    fetch("/api/products")
-    .then(result => {
-        return result.json();
-    })
-    .then(data => {
-        createTable(data)
+        fetch("/api/products")
+        .then(result => {
+            return result.json();
+        })
+        .then(data => {
+            createTable(data)
+        });
+
+        showSuccessPopup("Successfully added", "");
     });
 }
 
