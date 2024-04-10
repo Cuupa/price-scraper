@@ -18,7 +18,7 @@ def scrape_products():
             if name == "" or name is None:
                 continue
             store.add_point(product.id, name, price, currency, date_time)
-            if price < product.current_price and product.current_price is not None:
+            if product.current_price is not None and price < product.current_price:
                 notifications.notify(product, price)
         except Exception as error:
             print("An Error occured", error)
