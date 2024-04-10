@@ -57,23 +57,22 @@ def _scrape(json):
             "status": "error"
         }, 500
 
-    else:
-        soup = BeautifulSoup(response.content, 'html.parser')
-        price = soup.find(class_="rating-with-text").find(class_="price-list price-list--lg").find(
-            class_="text-lg").find(class_="money conversion-bear-money")
-        name = soup.find(class_="product-info__title h2").text.strip()
+    soup = BeautifulSoup(response.content, 'html.parser')
+    price = soup.find(class_="rating-with-text").find(class_="price-list price-list--lg").find(
+        class_="text-lg").find(class_="money conversion-bear-money")
+    name = soup.find(class_="product-info__title h2").text.strip()
 
-        if price is not None:
-            sanitized = price.text.replace(",", ".").strip()
-            currency = or_regex(currencies).search(sanitized).group(0)
-            price, sep, appendix = sanitized.replace("*", "").replace(currency, "").partition(" ")
-            return {
-                "status": "success",
-                "name": name,
-                "price": price.strip(),
-                "currency": currency,
-                "date_time": date_time
-            }
+    if price is not None:
+        sanitized = price.text.replace(",", ".").strip()
+        currency = or_regex(currencies).search(sanitized).group(0)
+        price, sep, appendix = sanitized.replace("*", "").replace(currency, "").strip().partition(" ")
+        return {
+            "status": "success",
+            "name": name,
+            "price": price.strip(),
+            "currency": currency,
+            "date_time": date_time
+        }
 
 
 def or_regex(symbols):
