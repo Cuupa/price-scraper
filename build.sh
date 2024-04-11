@@ -1,4 +1,4 @@
-app_version=0.6
+app_version=0.8
 
 amazon_scraper_version=0.3
 amso_scraper_version=0.3

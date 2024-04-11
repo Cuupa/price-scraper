@@ -6,7 +6,7 @@ import bcrypt
 from app.user.database_user import DatabaseUser
 
 database_file = "data/users.db"
-create_statement = """create table if not exists user (
+create_statement = """create table if not exists users (
     id integer primary key,
     username text not null,
     password text not null,
@@ -14,9 +14,8 @@ create_statement = """create table if not exists user (
 );    
 """
 
-create_dummy_user = """insert into user (username, password, salt) values(?, ?, ?);"""
-insert_statement = """insert into user(username, password, salt) values(?,?,?);"""
-search_statement = """select username, password, salt from user where username=?;"""
+insert_statement = """insert into users (username, password, salt) values(?, ?, ?);"""
+search_statement = """select username, password, salt from users where username=?;"""
 
 
 def initdb():
@@ -26,10 +25,13 @@ def initdb():
         con = sqlite3.connect(database_file)
         cursor = con.cursor()
         cursor.execute(create_statement)
+        con.commit()
+        cursor.close()
 
         salt = bcrypt.gensalt(12)
         password = bcrypt.hashpw("changeMe!".encode('utf-8'), salt)
-        cursor.execute(create_dummy_user, ("admin", password, salt))
+        con.cursor().execute(insert_statement, ("admin", password, salt))
+        cursor.close()
         con.commit()
         con.close()
 
@@ -38,8 +40,10 @@ def search(username: str):
     initdb()
     con = sqlite3.connect(database_file)
     cursor = con.cursor()
-    con.execute(search_statement, username)
+    con.execute(search_statement, (username,))
     rows = cursor.fetchall()
+    cursor.close()
+    con.close()
     users = []
     for row in rows:
         user = DatabaseUser(row[1], row[2], row[3])
