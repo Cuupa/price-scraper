@@ -1,9 +1,12 @@
+import flask_login
+
 from app import app
 from app.scraping import scraper
 from flask import request
 
 
 @app.route("/api/scraper/register", methods=['POST'])
+@flask_login.login_required
 def api_register():
     data = request.get_json()
     url = data['url']
@@ -13,5 +16,6 @@ def api_register():
 
 
 @app.route("/api/scrapers", methods=['GET'])
+@flask_login.login_required
 def api_scrapers():
     return {'scrapers': scraper.scrapers}

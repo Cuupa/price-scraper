@@ -1,27 +1,37 @@
 from datetime import datetime
 
-from flask import render_template
+import flask
+import flask_login
+from flask import render_template, redirect
+from flask_login import current_user
 
 from app import app
 from app.product_persistence import store as store
+from app.user import userservice
 
 
 @app.route("/", methods=['GET'])
 def index():
-    return render_template('index.html')
+    if current_user.is_authenticated:
+        return render_template('index.html')
+    else:
+        return redirect("/login", 302)
 
 
 @app.route("/scrapers", methods=['GET'])
+@flask_login.login_required
 def scrapers():
     return render_template("scrapers.html")
 
 
 @app.route("/settings", methods=['GET'])
+@flask_login.login_required
 def settings():
     return render_template("settings.html")
 
 
 @app.route("/product/<product_id>", methods=['GET'])
+@flask_login.login_required
 def product(product_id):
     result = store.find(product_id)
     if len(result) > 10:
@@ -37,6 +47,39 @@ def product(product_id):
     if not name:
         name = "pending"
     return render_template("product.html", prices=prices, dates=dates, name=name, currency=currency)
+
+
+@app.route("/login", methods=['GET'])
+def login():
+    return render_template("login.html")
+
+
+@app.route("/login", methods=['POST'])
+def do_login():
+    username = flask.request.form["email"]
+    password = flask.request.form["password"]
+    authenticated = userservice.is_authenticated(username, password)
+
+    if not authenticated:
+        return flask.redirect(flask.url_for("login"))
+
+    flask_login.login_user(User(username, password))
+    return flask.redirect(flask.url_for("protected"))
+
+
+@app.route("/protected")
+@flask_login.login_required
+def protected():
+    return flask.render_template_string(
+        "Logged in as: {{ user.id }}",
+        user=flask_login.current_user
+    )
+
+
+@app.route("/logout")
+def logout():
+    flask_login.logout_user()
+    return "Logged out"
 
 
 def _aggregate(products: list) -> list:

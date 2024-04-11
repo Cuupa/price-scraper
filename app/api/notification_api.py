@@ -1,4 +1,4 @@
-
+import flask_login
 from flask import request
 
 from app import app
@@ -7,6 +7,7 @@ from app.notifications import notifications
 
 
 @app.route('/api/notification', methods=['PUT'])
+@flask_login.login_required
 def register_notification_service():
     data = request.get_json()
 
@@ -40,6 +41,7 @@ def register_notification_service():
 
 
 @app.route('/api/notification/<notification_type>', methods=['GET'])
+@flask_login.login_required
 def load_notifications(notification_type: str):
     notification = notifications.get(notification_type)
     if notification is None:

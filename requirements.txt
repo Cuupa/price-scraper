@@ -4,6 +4,7 @@ charset-normalizer==3.3.2
 click==8.1.7
 Flask==3.0.2
 flask-sock==0.7.0
+Flask-Login==0.6.3
 h11==0.14.0
 idna==3.6
 itsdangerous==2.1.2

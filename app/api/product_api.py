@@ -1,3 +1,4 @@
+import flask_login
 from flask import request
 
 from app import app
@@ -7,6 +8,7 @@ from app.dataclasses.product import Product
 
 
 @app.route("/api/product", methods=['PUT'])
+@flask_login.login_required
 def api_add():
     data = request.get_json()
 
@@ -21,17 +23,20 @@ def api_add():
 
 
 @app.route("/api/products", methods=['GET'])
+@flask_login.login_required
 def api_products():
     return {'products': [(sanitize(entry)) for entry in store.all_products()]}
 
 
 @app.route('/api/product/<product_id>', methods=['DELETE'])
+@flask_login.login_required
 def delete_prodcut(product_id):
     store.remove_product(product_id)
     return '', 200
 
 
 @app.route('/api/product/<product_id>', methods=['GET'])
+@flask_login.login_required
 def get_product(product_id):
     points = store.find(product_id)
     return {'product': points}, 200
