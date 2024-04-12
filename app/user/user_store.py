@@ -22,23 +22,26 @@ def initdb():
     if not os.path.exists("data/"):
         os.makedirs("data/")
     if not os.path.exists(database_file):
-        con = sqlite3.connect(database_file)
-        cursor = con.cursor()
+        connection = sqlite3.connect(database_file)
+
+        cursor = connection.cursor()
         cursor.execute(create_statement)
-        con.commit()
+        connection.commit()
         cursor.close()
 
         salt = bcrypt.gensalt(12)
         password = bcrypt.hashpw("changeMe!".encode('utf-8'), salt)
-        con.cursor().execute(insert_statement, ("admin", password, salt))
+        cursor.execute(insert_statement, ("admin", str(password).replace('b', '').replace('\'', ''), str(salt).replace('b', '').replace('\'', '')))
         cursor.close()
-        con.commit()
-        con.close()
+        connection.commit()
+        connection.close()
+
 
 
 def search(username: str):
     initdb()
     con = sqlite3.connect(database_file)
+    con.set_trace_callback(print)
     cursor = con.cursor()
     con.execute(search_statement, (username,))
     rows = cursor.fetchall()
