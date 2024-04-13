@@ -1,5 +1,4 @@
-from app import app
-from app.scraping import scraper
+from app import app, scraper_manager
 from flask import request
 
 
@@ -8,10 +7,10 @@ def api_register():
     data = request.get_json()
     url = data['url']
     name = data['name']
-    scraper.register(name, url)
+    scraper_manager.register(name, url)
     return '', 200
 
 
 @app.route("/api/scrapers", methods=['GET'])
 def api_scrapers():
-    return {'scrapers': scraper.scrapers}
+    return {'scrapers': scraper_manager.scrapers}

@@ -1,8 +1,7 @@
 from flask import request
 
-from app import app
-from app.scraping import scheduler
-from app.product_persistence import store
+from app import app, store
+from app import scheduler
 from app.dataclasses.product import Product
 
 
@@ -26,7 +25,7 @@ def api_products():
 
 
 @app.route('/api/product/<product_id>', methods=['DELETE'])
-def delete_prodcut(product_id):
+def delete_product(product_id):
     store.remove_product(product_id)
     return '', 200
 

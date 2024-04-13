@@ -2,8 +2,7 @@ from datetime import datetime
 
 from flask import render_template
 
-from app import app
-from app.product_persistence import store as store
+from app import app, store
 
 
 @app.route("/", methods=['GET'])
