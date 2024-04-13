@@ -1,8 +1,7 @@
 import flask_login
 from flask import request
 
-from app import app
-from app.scraping import scheduler
+from app import app, scheduler
 
 
 @app.route("/api/settings", methods=['GET'])

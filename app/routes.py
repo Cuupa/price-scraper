@@ -5,8 +5,7 @@ import flask_login
 from flask import render_template, redirect
 from flask_login import current_user
 
-from app import app
-from app.product_persistence import store as store
+from app import app, store
 from app.user import userservice
 
 
