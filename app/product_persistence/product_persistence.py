@@ -37,7 +37,7 @@ class ProductPersistence:
         con = sqlite3.connect(self.database_file)
         cursor = con.cursor()
 
-        if len(search(url)) == 0:
+        if len(self.search(url)) == 0:
             cursor.execute(self.insert_statement, (url,))
             con.commit()
             success = True
