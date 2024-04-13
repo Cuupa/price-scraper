@@ -71,7 +71,7 @@ class NotificationsPersistence:
     def save(self, notification: ntfy):
         con = sqlite3.connect(self.database_file)
         cursor = con.cursor()
-        existing_notification = search('ntfy')
+        existing_notification = self.search('ntfy')
 
         if existing_notification is None:
             cursor.execute(self.ntfy_insert_statement,
