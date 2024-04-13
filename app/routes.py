@@ -6,6 +6,7 @@ from flask import render_template, redirect
 from flask_login import current_user
 
 from app import app, store
+from app.flaskuser import FlaskUser
 from app.user import userservice
 
 
@@ -62,7 +63,7 @@ def do_login():
     if not authenticated:
         return flask.redirect(flask.url_for("login"))
 
-    flask_login.login_user(User(username, password))
+    flask_login.login_user(FlaskUser(username, password))
     return flask.redirect(flask.url_for("protected"))
 
 
