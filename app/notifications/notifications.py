@@ -1,6 +1,5 @@
 import requests
 
-from app.notifications import notifications_store
 from app.dataclasses.product import Product
 import base64
 

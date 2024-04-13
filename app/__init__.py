@@ -29,4 +29,3 @@ login_manager.init_app(app)
 def user_loader(username):
     return userservice.get(username)
 
-scheduler.run()

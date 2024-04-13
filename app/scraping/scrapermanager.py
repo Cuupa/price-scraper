@@ -1,4 +1,5 @@
 import requests
+
 from app.dataclasses.scraper import Scraper
 
 
@@ -7,7 +8,7 @@ class ScraperManager:
         self.scrapers = []
 
     def register(self, name: str, url: str) -> bool:
-        obj = ScraperManager(name=name, url=url)
+        obj = Scraper(name=name, url=url)
         try:
             self.scrapers.append(obj)
             print("Added scraper { 'name':'" + name + "', 'url':'" + url + "'}")

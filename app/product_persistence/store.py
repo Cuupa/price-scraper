@@ -1,6 +1,5 @@
 from datetime import datetime
 
-from app.product_persistence import product_persistence as product_store, product_history_persistence as product_history
 from app.dataclasses.product import Product
 from app.dataclasses.product_history_point import ProductHistoryPoint
 from app.product_persistence.product_history_persistence import ProductHistoryPersistence

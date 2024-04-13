@@ -31,11 +31,11 @@ def initdb():
 
         salt = bcrypt.gensalt(12)
         password = bcrypt.hashpw("changeMe!".encode('utf-8'), salt)
-        cursor.execute(insert_statement, ("admin", str(password).replace('b', '').replace('\'', ''), str(salt).replace('b', '').replace('\'', '')))
+        cursor.execute(insert_statement, (
+        "admin", str(password).replace('b', '').replace('\'', ''), str(salt).replace('b', '').replace('\'', '')))
         cursor.close()
         connection.commit()
         connection.close()
-
 
 
 def search(username: str):
