@@ -1,16 +1,22 @@
 import bcrypt
 
-from app.user import user_store
+from app.flaskuser import FlaskUser
+from app.user.user_store import UserPersistence
+
+user_store = UserPersistence()
 
 
-def is_authenticated(username: str, password: str):
-    user = user_store.search(username)
-    if len(user) > 0:
-        password_from_input = bcrypt.hashpw(password.encode('utf-8'), user[0].salt)
-        if password_from_input == user.password:
+def is_authenticated(user: FlaskUser) -> bool:
+    database_user = user_store.search(user.id)
+    if user is not None:
+        password_from_input = (bcrypt.hashpw(user.password.encode('utf-8'),
+                                             database_user.salt.encode('utf-8'))
+                               .decode('utf-8'))
+        if password_from_input == database_user.password:
             return True
     return False
 
 
-def get(username):
-    return user_store.search(username)
+def get(username) -> FlaskUser:
+    database_user = user_store.search(username)
+    return FlaskUser(database_user.username, database_user.password)

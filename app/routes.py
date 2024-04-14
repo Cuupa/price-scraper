@@ -58,28 +58,19 @@ def login():
 def do_login():
     username = flask.request.form["email"]
     password = flask.request.form["password"]
-    authenticated = userservice.is_authenticated(username, password)
-
-    if not authenticated:
+    user = FlaskUser(username, password)
+    is_authenticated = userservice.is_authenticated(user)
+    if not is_authenticated:
         return flask.redirect(flask.url_for("login"))
 
     flask_login.login_user(FlaskUser(username, password))
-    return flask.redirect(flask.url_for("protected"))
-
-
-@app.route("/protected")
-@flask_login.login_required
-def protected():
-    return flask.render_template_string(
-        "Logged in as: {{ user.id }}",
-        user=flask_login.current_user
-    )
+    return flask.redirect(flask.url_for("/"))
 
 
 @app.route("/logout")
 def logout():
     flask_login.logout_user()
-    return "Logged out"
+    return render_template('index.html')
 
 
 def _aggregate(products: list) -> list:

@@ -7,6 +7,9 @@ from app.scraping.scrapermanager import ScraperManager
 from app.user import userservice
 
 app = Flask(__name__)
+# TODO: Env variables
+app.secret_key = 'super secret key'
+app.config['SESSION_TYPE'] = 'filesystem'
 sock = Sock(app)
 
 store = Store()

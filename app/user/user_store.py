@@ -5,50 +5,44 @@ import bcrypt
 
 from app.user.database_user import DatabaseUser
 
-database_file = "data/users.db"
-create_statement = """create table if not exists users (
-    id integer primary key,
-    username text not null,
-    password text not null,
-    salt text not null
-);    
-"""
 
-insert_statement = """insert into users (username, password, salt) values(?, ?, ?);"""
-search_statement = """select username, password, salt from users where username=?;"""
+class UserPersistence:
+    def __init__(self):
+        self.database_file = "data/users.db"
+        self.create_statement = """create table if not exists users (
+            id integer primary key,
+            username text not null,
+            password text not null,
+            salt text not null
+        );    
+        """
 
+        self.insert_statement = """insert into users (username, password, salt) values(?, ?, ?);"""
+        self.search_statement = """select username, password, salt from users where username=?;"""
+        self.initdb()
 
-def initdb():
-    if not os.path.exists("data/"):
-        os.makedirs("data/")
-    if not os.path.exists(database_file):
-        connection = sqlite3.connect(database_file)
+    def initdb(self):
+        if not os.path.exists("data/"):
+            os.makedirs("data/")
+        if not os.path.exists(self.database_file):
+            connection = sqlite3.connect(self.database_file)
 
-        cursor = connection.cursor()
-        cursor.execute(create_statement)
-        connection.commit()
-        cursor.close()
+            connection.execute(self.create_statement)
+            connection.commit()
 
-        salt = bcrypt.gensalt(12)
-        password = bcrypt.hashpw("changeMe!".encode('utf-8'), salt)
-        cursor.execute(insert_statement, (
-        "admin", str(password).replace('b', '').replace('\'', ''), str(salt).replace('b', '').replace('\'', '')))
-        cursor.close()
-        connection.commit()
-        connection.close()
+            salt = bcrypt.gensalt(12)
+            password = bcrypt.hashpw("changeMe!".encode('utf-8'), salt)
+            password_string = password.decode('utf-8')
+            salt_string = salt.decode('utf-8')
+            connection.execute(self.insert_statement, ("admin", password_string, salt_string))
+            connection.commit()
+            connection.close()
 
-
-def search(username: str):
-    initdb()
-    con = sqlite3.connect(database_file)
-    con.set_trace_callback(print)
-    cursor = con.cursor()
-    con.execute(search_statement, (username,))
-    rows = cursor.fetchall()
-    cursor.close()
-    con.close()
-    users = []
-    for row in rows:
-        user = DatabaseUser(row[1], row[2], row[3])
-        users.append(user)
-    return users
+    def search(self, username: str) -> DatabaseUser | None:
+        con = sqlite3.connect(self.database_file)
+        con.set_trace_callback(print)
+        rows = con.execute(self.search_statement, (username,)).fetchall()
+        con.close()
+        for row in rows:
+            return DatabaseUser(row[0], row[1], row[2])
+        return None
