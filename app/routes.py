@@ -64,7 +64,7 @@ def do_login():
         return flask.redirect(flask.url_for("login"))
 
     flask_login.login_user(FlaskUser(username, password))
-    return flask.redirect(flask.url_for("/"))
+    return flask.redirect(flask.url_for("/login"))
 
 
 @app.route("/logout")
