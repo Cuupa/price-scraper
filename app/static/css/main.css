@@ -5,3 +5,16 @@
 .spacer {
     margin-left: 2em;
 }
+
+#login-container {
+    margin: auto;
+    position: absolute;
+    left: 35%;
+    top: 35%;
+    width: 25em;
+}
+
+#login {
+    width: 100%;
+    align: center;
+}
