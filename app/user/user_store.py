@@ -1,7 +1,8 @@
 import os
 import sqlite3
 
-import bcrypt
+import hashlib
+import uuid
 
 from app.user.database_user import DatabaseUser
 
@@ -30,11 +31,9 @@ class UserPersistence:
             connection.execute(self.create_statement)
             connection.commit()
 
-            salt = bcrypt.gensalt(12)
-            password = bcrypt.hashpw("changeMe!".encode('utf-8'), salt)
-            password_string = password.decode('utf-8')
-            salt_string = salt.decode('utf-8')
-            connection.execute(self.insert_statement, ("admin", password_string, salt_string))
+            salt = uuid.uuid4().hex
+            password = hashlib.sha512(salt.encode('utf-8') + "changeMe!".encode('utf-8')).hexdigest()
+            connection.execute(self.insert_statement, ("admin", password, salt))
             connection.commit()
             connection.close()
 
