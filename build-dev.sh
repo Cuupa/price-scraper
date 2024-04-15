@@ -1,4 +1,4 @@
-architectures=linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v5,linux/arm/v6,linux/386,linux/arm64/v8,linux/ppc64le,linux/s390x
+architectures=linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v5,linux/arm/v6,linux/arm64/v8
 
 echo "Starting docker service"
 systemctl start docker
@@ -14,9 +14,3 @@ docker buildx build --push --platform=$architectures -t cuupa/price-scraper-amaz
 docker buildx build --push --platform=$architectures -t cuupa/price-scraper-amso:dev ./scraper_modules/amso
 docker buildx build --push --platform=$architectures -t cuupa/price-scraper-minisforum:dev ./scraper_modules/minisforum
 docker buildx build --push --platform=$architectures -t cuupa/price-scraper-yournextit:dev ./scraper_modules/yournextit
-
-#sudo docker push cuupa/price-scraper -a
-#sudo docker push cuupa/price-scraper-amazon -a
-#sudo docker push cuupa/price-scraper-amso -a
-#sudo docker push cuupa/price-scraper-minisforum -a
-#sudo docker push cuupa/price-scraper-yournextit -a
