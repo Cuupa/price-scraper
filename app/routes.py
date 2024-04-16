@@ -72,6 +72,11 @@ def logout():
     flask_login.logout_user()
     return flask.redirect("/login")
 
+@app.route("/profile")
+@flask_login.login_required
+def profile():
+    return render_template("profile.html")
+
 
 def _aggregate(products: list) -> list:
     day_dict = {}
