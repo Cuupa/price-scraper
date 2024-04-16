@@ -22,25 +22,24 @@
 </nav>
 
 <div class="toast-container position-absolute" style="z-index: 100000;padding: 10px;"></div>
-<div class='container'>
-    <div id="login-container">
-        <div id="login">
-            <form method=post>
-                <div class="form-floating mb-3">
-                    <input type="text" class="form-control" name="username" id="username">
-                    <label for="username">Username</label>
-                </div>
-                <div class="form-floating mb-3">
-                    <input type="password" class="form-control" name="password" id="password">
-                    <label for="password">Password</label>
-                </div>
-                <button class="btn btn-primary" type="submit">Log In</button>
-            </form>
-        </div>
+<div id="login-container">
+    <div id="login">
+        <h1>Login</h1>
+        <br />
+        <form method=post>
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" name="username" id="username">
+                <label for="username">Username</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="password" class="form-control" name="password" id="password">
+                <label for="password">Password</label>
+            </div>
+            <button class="btn btn-primary" type="submit">Log In</button>
+        </form>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="static/js/app.js" type="module"></script>
 </body>
 </html>

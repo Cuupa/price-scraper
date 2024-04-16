@@ -1,20 +1,41 @@
+html, body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    background-color: #ddd;
+}
+
 .container {
-    margin-top: 2em;
+    height: 100%;
+    width: 100%;
+}
+
+.content {
+    margin: 2rem;
+    padding: 2rem;
+    width: 100%;
+    background-color: #fff;
+    border-radius: 8px;
 }
 
 .spacer {
-    margin-left: 2em;
+    margin-left: 2rem;
 }
 
 #login-container {
-    margin: auto;
-    position: absolute;
-    left: 35%;
-    top: 35%;
-    width: 25em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
 }
 
 #login {
-    width: 100%;
-    align: center;
+    margin: 2rem;
+    padding: 2rem;
+    width: 25rem;
+    background-color: #fff;
+    border-radius: 8px;
 }
