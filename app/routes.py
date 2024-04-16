@@ -70,7 +70,7 @@ def do_login():
 @app.route("/logout")
 def logout():
     flask_login.logout_user()
-    return render_template('index.html')
+    return flask.redirect("/login")
 
 
 def _aggregate(products: list) -> list:
