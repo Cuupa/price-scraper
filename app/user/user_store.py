@@ -39,7 +39,6 @@ class UserPersistence:
 
     def search(self, username: str) -> DatabaseUser | None:
         con = sqlite3.connect(self.database_file)
-        con.set_trace_callback(print)
         rows = con.execute(self.search_statement, (username,)).fetchall()
         con.close()
         for row in rows:
