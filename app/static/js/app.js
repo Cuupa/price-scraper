@@ -36,7 +36,9 @@ function navigateToProduct(event) {
     window.location.href = "/product/" + currentRow.id;
 }
 
- function createTable(data, status) {
+function createTable(data, status) {
+    if(!data) { return; }
+
     let tbody = document.querySelector("tbody");
     tbody.innerHTML = '';
     for (let i = 0; i < data['products'].length; i++) {
