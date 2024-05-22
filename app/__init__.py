@@ -17,3 +17,4 @@ scheduler.run()
 
 from app import routes
 from app import api
+from app import websocket_server

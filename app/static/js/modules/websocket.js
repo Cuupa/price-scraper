@@ -2,17 +2,17 @@ let ws
 
 export function openWebsocket() {
     if( typeof(ws) == 'undefined' || ws.readyState === undefined || ws.readyState > 1) {
-        ws = new WebSocket("ws://localhost:5000/websocket");
+        let url = window.location.host + window.location.pathname + "websocket";
+        let protocol = window.location.protocol === "http:" ? "ws:" : "wss:";
+        let websocketUrl = protocol + "//" + url;
+        ws = new WebSocket(websocketUrl);
         ws.addEventListener('open', function(msg) {
-            console.log(msg);
         });
 
         ws.addEventListener('error', function(msg) {
-            console.log(msg);
         });
 
         ws.addEventListener('close', function(msg) {
-            console.log(msg);
         });
 
         ws.addEventListener('message', function(event) {
