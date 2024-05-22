@@ -22,7 +22,8 @@ scheduler.run()
 
 from app import routes
 from app import api
-from app.scraping import scheduler
+from app import websocket_server
+
 
 login_manager = LoginManager()
 login_manager.init_app(app)
