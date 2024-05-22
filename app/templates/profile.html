@@ -1,4 +1,4 @@
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 <head>
     <title>Price Scraper</title>
     <link href="static/css/ext/bootstrap.min.css" rel="stylesheet">
@@ -20,7 +20,7 @@
                 <a class="nav-link" href="/">Home</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/settings"><b>Settings</b></a>
+                <a class="nav-link" href="/settings">Settings</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/scrapers">Scrapers</a>
@@ -53,6 +53,7 @@
                 </div>
                 <div class="col">
                     <input type="password" id="currentPassword" class="form-control">
+                    <div class="invalid-feedback">Please insert your current password.</div>
                 </div>
             </div>
             <div class="row g-3 align-items-center">
@@ -60,7 +61,7 @@
                     <label for="newPassword" class="col-form-label">New Password</label>
                 </div>
                 <div class="col">
-                    <input type="password" id="newPassword" class="form-control">
+                    <input type="password" id="newPassword" class="form-control" required>
                 </div>
             </div>
             <div class="row g-3 align-items-center">
@@ -68,13 +69,21 @@
                     <label for="confirmPassword" class="col-form-label">Confirm Password</label>
                 </div>
                 <div class="col">
-                    <input type="password" id="confirmPassword" class="form-control">
+                    <input type="password" id="confirmPassword" class="form-control" required>
+                    <div class="invalid-feedback">The passwords do not match</div>
+
+                </div>
+            </div>
+            <div class="row g-3 align-items-center">
+                <div class="col">
+                    <button type="button" class="btn btn-primary" id="button_profile_save">Save</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<script src="static/js/profile.js"></script>
 <script src="static/js/ext/sweetalert2-11.10.7.min.js"></script>
 </body>
 </html>

@@ -12,6 +12,9 @@ class ProductHistoryPersistence:
                 date text not null
             );
         """
+
+        self.index_statement = """create index if not exists 'index_id_product' on product_history(id_product);"""
+
         self.insert_statement = """insert into product_history(id_product, price, currency, date) 
         values (?, ?, ?, ?);
         """
@@ -25,6 +28,7 @@ class ProductHistoryPersistence:
         con = sqlite3.connect(self.database_file)
         cursor = con.cursor()
         cursor.execute(self.create_statement)
+        cursor.execute(self.index_statement)
         con.commit()
         con.close()
 

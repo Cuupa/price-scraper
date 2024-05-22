@@ -1,7 +1,7 @@
 import hashlib
 
 from app.flaskuser import FlaskUser
-from app.user.user_store import UserPersistence
+from app.user.user_persistence import UserPersistence
 
 user_store = UserPersistence()
 
